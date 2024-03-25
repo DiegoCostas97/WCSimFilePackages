@@ -28,24 +28,24 @@ def plot3d(df, event, title='Generic Title', colormap='jet', mode='time', alpha=
     r = np.float64(df[(df['event_id'] == event) & (df['hit_r'] > 100)]['hit_start_r'].values)
     norm_r = map_list(r)
     markers = ['*' if ri <= np.sqrt(2**2+2**2) else 'o' for ri in r]
-    
+
     fig = plt.figure()
     ax = plt.axes(projection='3d')
 
     if mode=='marker':
         for xi,yi,zi,ti,ri,mi in zip(x,y,z,t,norm_r,markers):
             p = ax.scatter3D(xi, yi, zi, c=ti, s=ri, marker=mi, cmap=colormap, alpha=alpha)
-       
+
     elif mode=='time':
         p = ax.scatter3D(x, y, z, c=t, s=map_list(r), cmap=colormap, alpha=alpha)
-        
+
     fig.colorbar(p, ax=ax, label='True Hit Time')
 
     ax.set_title("{}".format(title))
     ax.set_xlabel('X [mm]');
     ax.set_ylabel('Y [mm]');
     ax.set_zlabel('Z [mm]');
-    
+
     
 def plot3d_digihits(df, title='Generic Title', third_variable='hit_time', colormap='jet', alpha=0.3):
     x = np.float64(df['X'].values)

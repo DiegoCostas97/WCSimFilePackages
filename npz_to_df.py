@@ -249,36 +249,40 @@ def simple_track_info_to_df(file):
     track_energy          = npz['track_energy']
     track_start_position  = npz['track_start_position']
     track_stop_position   = npz['track_stop_position']
-    
+    track_start_time      = npz['track_start_time']
+
     data = [list((i,
                   tpi,
                   ti,
                   tp,
                   tcp,
                   te,
+                  tst,
                   np.sqrt(tsp[:, 0]**2 + tsp[:, 1]**2 + tsp[:, 2]**2),
-                  np.sqrt(top[:, 0]**2 + top[:, 1]**2 + top[:, 2]**2))) for i, tpi, ti, tp, tcp, te, tsp, top in zip(event,
-                                                                                                           track_pid,
-                                                                                                           track_id,
-                                                                                                           track_parent,
-                                                                                                           track_creator_process,
-                                                                                                           track_energy,
-                                                                                                           track_start_position,
-                                                                                                           track_stop_position)]
-    
-    
+                  np.sqrt(top[:, 0]**2 + top[:, 1]**2 + top[:, 2]**2))) for i, tpi, ti, tp, tcp, te, tst, tsp, top in zip(event,
+                                                                                                                     track_pid,
+                                                                                                                     track_id,
+                                                                                                                     track_parent,
+                                                                                                                     track_creator_process,
+                                                                                                                     track_energy,
+                                                                                                                     track_start_time,
+                                                                                                                     track_start_position,
+                                                                                                                     track_stop_position)]
+
+
     df = pd.DataFrame(data, columns=['event_id',
                                      'A',
                                      'J',
                                      'K',
                                      'L',
                                      'M',
+                                     'B',
                                      'N',
                                      'P'])
 
-    df = df.explode(list('AJKLMNP'))
+    df = df.explode(list('AJKLBMNP'))
 
-    df = df.rename(columns={"A": "track_pid", "J": "track_id", "K":"track_parent", "L":"track_creator_process",
+    df = df.rename(columns={"A": "track_pid", "B":"track_ti", "J": "track_id", "K":"track_parent", "L":"track_creator_process",
                             "M": "track_energy", "N": "track_ri", "P": "track_rf"})
 
     return df
